@@ -35,7 +35,7 @@ jobs:
         run: npm ci
 
       - name: Lint frontend
-        wokring-directory: client
+        working-directory: client
         run: npm run lint -- --max-warnings=0
 
       - name: Build backend image
