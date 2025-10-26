@@ -1,0 +1,46 @@
+name: build-and-lint #workflow name, label, shown in github actions UI
+
+# triggers: defines when this workflow should run
+# trigger when we push to these branches
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+#define a job (can define multiple jobs)
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest # this job will run on ubuntu latest runner provided by github
+  
+    steps:
+      - name: Checkout repo # usage- runner should have access to your repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: Install backend dependencies
+        working-directory: server
+        run: npm ci
+
+      - name: Lint backend
+        working-directory: server
+        run: npm run lint -- --max-warnings=0
+
+      - name: Install frontend dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Lint frontend
+        wokring-directory: client
+        run: npm run lint -- --max-warnings=0
+
+      - name: Build backend image
+        run: docker build -t backend ./server
+
+      - name: Build frontend image
+        run: docker build -t frontend ./client
+      

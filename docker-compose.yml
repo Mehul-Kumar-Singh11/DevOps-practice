@@ -1,0 +1,60 @@
+services:
+  backend:
+    build: ./server
+    container_name: backend-container
+    restart: always
+    env_file:
+      - ./server/.env
+    ports:
+      - "5001:5001"
+  frontend:
+    build: ./client
+    container_name: frontend-container
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+#
+# version: "3.9"
+
+# services:
+#   backend:
+#     build:
+#       context: ./server
+#       dockerfile: Dockerfile
+#     image: myapp-backend:latest
+#     container_name: backend-container
+#     restart: always
+#     env_file:
+#       - ./server/.env
+#     ports:
+#       - "5001:5001"
+#     volumes:
+#       - ./server:/app          # For live code updates during dev
+#       - /app/node_modules      # Avoid overwriting node_modules
+#     networks:
+#       - myapp-network
+
+#   frontend:
+#     build:
+#       context: ./client
+#       dockerfile: Dockerfile
+#     image: myapp-frontend:latest
+#     container_name: frontend-container
+#     restart: always
+#     ports:
+#       - "5173:5173"
+#     volumes:
+#       - ./client:/app          # For live updates
+#       - /app/node_modules
+#     depends_on:
+#       - backend
+#     networks:
+#       - myapp-network
+
+# networks:
+#   myapp-network:
+#     driver: bridge
+#
